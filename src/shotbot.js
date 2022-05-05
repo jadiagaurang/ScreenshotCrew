@@ -62,7 +62,7 @@ module.exports = class ShotBot {
 
 			if (!util.isBlank(imageCloudFrontURL)) {
 				return {
-					"screenshotCloudPath": imageCloudFrontURL["FilePath"]
+					"screenshotPath": imageCloudFrontURL["FilePath"]
 				};
 			}
 			else {

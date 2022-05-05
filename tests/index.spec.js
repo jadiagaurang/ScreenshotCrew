@@ -5,7 +5,7 @@ const assert = require("assert");
 const app = require("../app");
 
 describe("GET /", function() {
-    it("Index StatusCode 200", function(done) {
+    it("Index StatusCode 200 OK", function(done) {
         supertest(app)
 		.get("/")
 		.expect(200)
