@@ -7,6 +7,9 @@ ScreenshotCrew is an open-source screenshot as a service using Chrome's Puppetee
 * https://browshot.com/
 * https://screenshotmachine.com/
 
+## Demo
+Coming soon at [https://screenshotcrew.com/](https://screenshotcrew.com/)
+
 ## Installation
 ```base
 npm install
