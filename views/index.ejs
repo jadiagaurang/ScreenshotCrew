@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en" id="screenshotcrew" class="screenshotcrew">
+    <head id="head">
+        <%- include("./partials/head"); %>
+    </head>
+    <body>
+      <form id="form">
+        <%- include("./partials/header"); %>
+        <div class="center-block">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h1>Home</h1>
+              </div>
+            </div>
+            <div class="result hide">
+              <div class="row">
+                  <div class="col-md-12">
+                    <h1>Result</h1>
+                    <pre id="json"></pre>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('./partials/footnote'); %>
+      </form>
+    </body>
+    <%- include('./partials/footer'); %>
+</html>
