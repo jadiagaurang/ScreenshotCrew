@@ -1,5 +1,5 @@
 # ScreenshotCrew
-ScreenshotCrew is an open-source screenshot as a service using Puppeteer headless browser. Using Node.js, Puppeteer and other plugins, ScreenshotCrew provides utility tool to create screenshot from any web page.
+ScreenshotCrew is an open-source screenshot as a service using [Puppeteer headless browser](https://github.com/puppeteer/puppeteer). Using Node.js, [Puppeteer](https://pptr.dev/) and other plugins, ScreenshotCrew provides utility tool to create screenshot from any web page.
 
 ## Motivation
 * https://screenshotlayer.com/
