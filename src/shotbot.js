@@ -40,7 +40,7 @@ module.exports = class ShotBot {
 
 		me.logger.info("getScreenshot : " + this.objURL);
 
-		const args = ["--disable-setuid-sandbox", "--no-sandbox"];
+		const args = ["--disable-setuid-sandbox", "--no-sandbox", "--disable-extensions"];
 		const options = {
 			args,
 			headless: true
