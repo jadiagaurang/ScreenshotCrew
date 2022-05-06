@@ -1,3 +1,60 @@
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://spin.js.org/spin.umd.js" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("button").bind("click", function (event) {
+            event.preventDefault();
+
+            var varURL = $("input").val();
+            $.ajax({
+                url: "/api/capture",
+                method: "POST",
+                data: {
+                    "url": varURL
+                },
+                beforeSend: function () {
+                    $(".result").removeClass("hide");
+                    $(".screenshotAnchor").attr({ "href": "" });
+                    $(".screenshot").attr({ "src": "" }).addClass("hide");
+
+                    var opts = {
+                        lines: 13, // The number of lines to draw
+                        length: 38, // The length of each line
+                        width: 17, // The line thickness
+                        radius: 45, // The radius of the inner circle
+                        scale: 1, // Scales overall size of the spinner
+                        corners: 1, // Corner roundness (0..1)
+                        speed: 1, // Rounds per second
+                        rotate: 0, // The rotation offset
+                        animation: 'spinner-line-shrink', // The CSS animation name for the lines
+                        direction: 1, // 1: clockwise, -1: counterclockwise
+                        color: '#000000', // CSS color or array of colors
+                        fadeColor: 'transparent', // CSS color or array of colors
+                        top: '50%', // Top position relative to parent
+                        left: '50%', // Left position relative to parent
+                        shadow: '0 0 1px transparent', // Box-shadow for the lines
+                        zIndex: 2000000000, // The z-index (defaults to 2e9)
+                        className: 'spinner', // The CSS class to assign to the spinner
+                        position: 'absolute', // Element positioning
+                    };
+
+                    var target = $(".screenshotWrapper")[0];
+                    window.spinner = new Spin.Spinner(opts).spin(target);
+                },
+                success:function(data) {
+                    $(".screenshotAnchor").attr({ "href": data.screenshotPath });
+                    $(".screenshot").attr({ "src": data.screenshotPath }).removeClass("hide");
+                },
+                error: function () {
+                    $(".result").addClass("hide");
+                },
+                complete: function () {
+                    window.spinner.stop();
+                }
+            });
+        });
+    });
+</script>

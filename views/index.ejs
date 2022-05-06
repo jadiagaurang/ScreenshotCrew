@@ -11,14 +11,28 @@
           <div class="container">
             <div class="row">
               <div class="col-md-12">
-                <h1>Home</h1>
+                <h1 title="Screenshot as a service">ScreenshotCrew</h1>
+              </div>
+              <div class="col-md-12">
+                <div class="input-group">
+                  <div class="wrapper">
+                    <input type="text" class="form-control input-lg" title="Enter a Website URL to capture screenshot" placeholder="https://www.apple.com/" value="https://gaurangjadia.com" />
+                    <div class="controls">
+                      <button title="Generate a Screenshot">Capture</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="result hide">
               <div class="row">
                   <div class="col-md-12">
                     <h1>Result</h1>
-                    <pre id="json"></pre>
+                    <pre class="screenshotWrapper">
+                      <a class="screenshotAnchor" target="_blank">
+                        <img class="screenshot hide" alt="screenshot" />
+                      </a>
+                    </pre>
                   </div>
               </div>
             </div>
