@@ -13,7 +13,7 @@ ScreenshotCrew is an open-source screenshot as a service using [Puppeteer headle
 * https://screenshotmachine.com/
 
 ## Demo
-Coming soon at [https://screenshotcrew.com/](https://screenshotcrew.com/)
+[https://screenshotcrew.com/](https://screenshotcrew.com/)
 
 ## Installation
 ```base
@@ -30,14 +30,24 @@ npm start
 
 ### Local
 ```base
-nodemon app.js
+npm run-script dev
 ```
 
 ## API Reference
-Reference will come soon!
+```bash
+curl --location --request GET "http://localhost:8080/api/capture?url=https://gaurangjadia.com"
+```
+
+```bash
+curl --location --request POST "http://localhost:8080/api/capture" --header 'Content-Type: application/json' --data-raw '{
+    "url": "https://gaurangjadia.com"
+}'
+```
 
 ## Tests
-Test case will come soon!
+```base
+npm test
+```
 
 ## License
 Please see the [license file](https://github.com/jadiagaurang/ScreenshotCrew/blob/main/LICENSE) for more information.
