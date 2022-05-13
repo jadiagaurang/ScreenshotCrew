@@ -273,7 +273,7 @@ module.exports = class ShotBot {
 				res.end();
 			}
 			else {
-				//me.logger.info(stat);
+				me.logger.info(stat);
 
 				fs.readFile(imagePath, function(errInner, data) {
 					if(errInner) {
