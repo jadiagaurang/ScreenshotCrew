@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 "use strict";
 
 const puppeteer = require("puppeteer");
@@ -35,7 +37,7 @@ module.exports = class ShotBot {
 		this.appServerURL = process.env.APP_SERVER;
 	}
 
-	async getScreenshot() {
+	getScreenshot = async () => {
 		var me = this;
 
 		me.logger.info("getScreenshot : " + this.objURL);
@@ -77,9 +79,8 @@ module.exports = class ShotBot {
 			throw ex;
 		}
 	}
-
-	//Intitial operation required for the segmentation to run.
-	async setup(page) {
+	
+	setup = async (page) => {
 		var me = this;
 
 		me.logger.info("Setup : " + this.objURL);
@@ -133,7 +134,7 @@ module.exports = class ShotBot {
 		}
 	}
 
-	async scrollToTop(page) {
+	scrollToTop = async (page) => {
 		var me = this;
 
 		me.logger.info("scrollToTop : " + this.objURL);
@@ -147,7 +148,7 @@ module.exports = class ShotBot {
 		await util.delay(500);
 	}
 
-	async scrollToBottom(page) {
+	scrollToBottom = async(page) =>  {
 		var me = this;
 
 		me.logger.info("scrollToBottom : " + this.objURL);
@@ -184,7 +185,7 @@ module.exports = class ShotBot {
 		await util.delay(2500);
 	}
 
-	async takeScrenshot(page) {
+	takeScrenshot = async (page) => {
 		var me = this;
 
 		me.logger.info("takeScrenshot : " + this.objURL);
@@ -212,7 +213,7 @@ module.exports = class ShotBot {
 		return imageName;
 	}
 
-	async uploadScreenshot(imageName) {
+	uploadScreenshot = async (imageName) => {
 		var me = this;
 
 		if (!util.isBlank(process.env.AWS_ACCESS_KEY_ID) && 
@@ -254,7 +255,7 @@ module.exports = class ShotBot {
 		}
 	}
 
-	fetchScreenshot(req, res, imageName) {
+	fetchScreenshot = (req, res, imageName) => {
 		var me = this;
 
 		me.logger.info("fetchScreenshot: imageName = " + imageName);

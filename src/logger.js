@@ -1,8 +1,10 @@
+#! /usr/bin/env node
+
 "use strict";
 
 const winston = require("winston");
 
-const createLogger = function(logLevel) {
+const createLogger = (logLevel) => {
     const logger = winston.createLogger({
         levels: winston.config.syslog.levels,
         level: logLevel || "info",

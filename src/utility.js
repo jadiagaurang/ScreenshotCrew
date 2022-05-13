@@ -1,13 +1,15 @@
+#! /usr/bin/env node
+
 "use strict";
 
 const Memcached = require("memcached");
 
 module.exports = class Utility {
-	static isBlank (obj) {
+	static isBlank = (obj) => {
 		return (!obj || obj === "");
 	}
 
-	static async getCachedResult (strKey) {
+	static getCachedResult = async (strKey) => {
 		return new Promise((resolve, reject) => {
 			var memcacheHost = process.env.SERVER_MEMCACHE_HOST;
 			var memcachePort = process.env.SERVER_MEMCACHE_PORT;
@@ -38,7 +40,7 @@ module.exports = class Utility {
 		});
 	}
 
-	static async setCachedResult (strKey, data) {
+	static setCachedResult = async (strKey, data) => {
 		return new Promise((resolve, reject) => {
 			var memcacheHost = process.env.SERVER_MEMCACHE_HOST;
 			var memcachePort = process.env.SERVER_MEMCACHE_PORT;
@@ -68,7 +70,7 @@ module.exports = class Utility {
 		});
 	}
 
-	static delay(timeout) {
+	static delay = (timeout) => {
 		return new Promise((resolve) => {
 			setTimeout(resolve, timeout);
 		});
