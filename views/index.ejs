@@ -11,24 +11,25 @@
           <div class="container">
             <div class="row">
               <div class="col-md-12">
-                <h1 title="Screenshot as a service">ScreenshotCrew</h1>
+                <h1 title="Screenshot as a service">Take a Screenshot</h1>
               </div>
               <div class="col-md-12">
-                <div class="input-group">
-                  <div class="wrapper">
-                    <input type="text" class="form-control input-lg" title="Enter a Website URL to capture screenshot" placeholder="https://www.apple.com/" value="https://gaurangjadia.com" />
-                    <div class="controls">
-                      <button title="Generate a Screenshot">Capture</button>
-                    </div>
-                  </div>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-addon" id="sizing-addon1">https://</span>
+                  <input type="text" class="form-control" placeholder="e.g. apple.com" aria-describedby="sizing-addon1">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit" title="Generate a Screenshot">Capture!</button>
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="container-fluid full-width">
             <div class="result hide">
-              <div class="row">
+              <div class="row row-no-gutter">
                   <div class="col-md-12">
-                    <h1>Result</h1>
-                    <pre class="screenshotWrapper">
+                    <h2 class="hide">Result</h2>
+                    <pre class="text-center screenshotWrapper">
                       <a class="screenshotAnchor" target="_blank">
                         <img class="screenshot hide" alt="screenshot" />
                       </a>

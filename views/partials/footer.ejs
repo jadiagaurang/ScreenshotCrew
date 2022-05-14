@@ -4,12 +4,34 @@
 <script src="https://spin.js.org/spin.umd.js" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
+    const isBlank = (obj) => {
+		return (!obj || obj === "");
+	}
+
+    const isValidHttpUrl = (string) => {
+        let url;
+  
+        try {
+            url = new URL(string);
+        } catch (_) {
+            return false;  
+        }
+
+        return url.protocol === "http:" || url.protocol === "https:";
+    }
+
     $(document).ready(function() {
         $("button").bind("click", function (event) {
             event.preventDefault();
 
             var varURL = $("input").val();
-            $.ajax({
+
+            if (!isBlank(varURL)) {
+                if (!isValidHttpUrl(varURL)) {
+                    varURL = "http://" + varURL;
+                }
+
+                $.ajax({
                 url: "/api/capture",
                 method: "POST",
                 data: {
@@ -55,6 +77,10 @@
                     window.spinner.stop();
                 }
             });
+            }
+            else {
+                
+            }
         });
     });
 </script>

@@ -1,6 +1,6 @@
 {
   "name": "screenshotcrew",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ScreenshotCrew is an open-source screenshot as a service using Puppeteer headless browser. Using Node.js, Puppeteer and other plugins, ScreenshotCrew provides utility tool to create screenshot from any web page.",
   "main": "app.js",
   "scripts": {
@@ -43,8 +43,9 @@
     "memcached": "^2.2.2",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.16",
-    "puppeteer": "^13.7.0",
+    "puppeteer": "^14.1.0",
     "serve-favicon": "^2.5.0",
+    "underscore": "^1.13.3",
     "uuid": "^8.3.2",
     "winston": "^3.7.2"
   }

@@ -2,21 +2,30 @@
 
 "use strict";
 
+// External Packages
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const { URL } = require("url");
 const AWS = require("aws-sdk");
-
+const _ = require("underscore");
+// Internal Modules
 const winston = require("./logger").winston;
 const util = require("./utility.js");
 
 module.exports = class ShotBot {
+	defaultOptions = {
+		"width": 1440,
+		"height": 1024,
+		"isMobile": false
+	}
+
 	//Default Constructor
-	constructor(strURL) {
+	constructor(strURL, options) {
 		var me = this;
-		
+
+		me.options = _.extend({}, me.defaultOptions, options);
 		me.logger = winston(process.env.LOG_LEVEL);
 
 		if (!util.isBlank(strURL)) {
@@ -88,9 +97,10 @@ module.exports = class ShotBot {
 		try {
 			//Set Viewport
 			page.setViewport({
-				width: 1920,
-				height: 1080,
-				deviceScaleFactor: 1
+				width: me.options.width,
+				height: me.options.height,
+				deviceScaleFactor: 1,
+				isMobile: me.options.isMobile
 			});
 
 			//Setup UserAgent

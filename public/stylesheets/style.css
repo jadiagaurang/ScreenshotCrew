@@ -91,5 +91,5 @@ body > .container {
 
 pre, code {
   font-size: 80%;
-  height: 900px;
+  height: calc(100vh - 278px);
 }

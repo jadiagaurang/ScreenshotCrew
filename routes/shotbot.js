@@ -2,14 +2,13 @@
 
 "use strict";
 
+// External Packages
 const express = require("express");
 var router = express.Router();
-
-// Load local plugins
+// Internal Modules
 const winston = require("../src/logger").winston;
 const ShotBot = require("../src/shotbot.js");
 const util = require("../src/utility.js");
-
 var meLogger = winston(process.env.LOG_LEVEL);
 
 /* GET */
@@ -37,7 +36,7 @@ function doCapture (req, res) {
         }
 
         if (util.isBlank(varURL)) {
-            throw new Error("Invalid IP");
+            throw new Error("Invalid URL");
         }
 
         try {
@@ -58,11 +57,26 @@ function doCapture (req, res) {
                 }
                 else {
                     try {
+                        let options = null; 
+                        if (!util.isBlank(req.query.width)) {
+                            options["width"] = req.query.width;
+                        }
+                        else if (!util.isBlank(req.body.width)) {
+                            options["width"] = req.body.width;
+                        }
+
+                        if (!util.isBlank(req.query.height)) {
+                            options["height"] = req.query.height;
+                        }
+                        else if (!util.isBlank(req.body.height)) {
+                            options["height"] = req.body.height;
+                        }
+
                         // ShotBot Module Object
-                        var objShotBot = new ShotBot(varURL);
+                        let objShotBot = new ShotBot(varURL, options);
 
 						// Generate Screenshot
-                        var outputResponse = await objShotBot.getScreenshot();
+                        let outputResponse = await objShotBot.getScreenshot();
 
                         var blnResult = await util.setCachedResult(strKey, outputResponse);
                         if (!blnResult) {
