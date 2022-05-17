@@ -36,14 +36,23 @@ npm update
 
 ## Code Example
 
-### PROD
+### Prod
+
 ```base
 npm start
 ```
 
-### LOCAL DEV
+### Local/Develop
+
 ```base
 npm run-script dev
+```
+
+### Docker Container
+
+```base
+docker pull jadiagaurang/screenshotcrew
+docker run -d -p 80:80 jadiagaurang/screenshotcrew
 ```
 
 ## Tests

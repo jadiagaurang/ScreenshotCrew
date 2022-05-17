@@ -20,6 +20,12 @@
         return url.protocol === "http:" || url.protocol === "https:";
     }
 
+    const scrollToTop = (intScrollTop) => {
+        $(".screenshotWrapper").animate({
+            scrollTop: intScrollTop
+        }, 1000);
+    }
+
     $(document).ready(function() {
         $("button").bind("click", function (event) {
             event.preventDefault();

@@ -27,7 +27,7 @@ router.get("/screenshot/:screenshotName", function(req, res) {
 });
 
 //Routing Callback
-function doCapture (req, res) {
+const doCapture = async (req, res) => {
     try {
         //Get Web Page URL from the Request
         var varURL = req.query.url;    //Try to get it from Query String
@@ -40,73 +40,71 @@ function doCapture (req, res) {
         }
 
         try {
-            (async() => {
-                var strKey = varURL.toLowerCase();
+            var strKey = varURL.toLowerCase();
 
-                var varCachedResult = await util.getCachedResult(strKey);
+            var varCachedResult = await util.getCachedResult(strKey);
 
-                if (varCachedResult != null) {
-					// Response Back from the Cache
-					res.write(JSON.stringify(varCachedResult));
+            if (varCachedResult != null) {
+                // Response Back from the Cache
+                res.write(JSON.stringify(varCachedResult));
 
-                    // Set Response Header for Debugging
-                    res.writeHead(200, { "Content-Type": "application/json", "X-Cache": "HIT" });
-                    
-					// End the Response
+                // Set Response Header for Debugging
+                res.writeHead(200, { "Content-Type": "application/json", "X-Cache": "HIT" });
+                
+                // End the Response
+                res.end();
+            }
+            else {
+                try {
+                    let options = null; 
+                    if (!util.isBlank(req.query.width)) {
+                        options["width"] = req.query.width;
+                    }
+                    else if (!util.isBlank(req.body.width)) {
+                        options["width"] = req.body.width;
+                    }
+
+                    if (!util.isBlank(req.query.height)) {
+                        options["height"] = req.query.height;
+                    }
+                    else if (!util.isBlank(req.body.height)) {
+                        options["height"] = req.body.height;
+                    }
+
+                    // ShotBot Module Object
+                    let objShotBot = new ShotBot(varURL, options);
+
+                    // Generate Screenshot
+                    let outputResponse = await objShotBot.getScreenshot();
+
+                    var blnResult = await util.setCachedResult(strKey, outputResponse);
+                    if (!blnResult) {
+                        meLogger.error("MemcachedClient Set Exception at " + (new Date()));
+                    }
+
+                    //Set Response ContentType
+                    res.writeHead(200, { "Content-Type": "application/json", "X-Cache": "MISS" });
+
+                    //Write Output
+                    res.write(JSON.stringify(outputResponse));
                     res.end();
                 }
-                else {
-                    try {
-                        let options = null; 
-                        if (!util.isBlank(req.query.width)) {
-                            options["width"] = req.query.width;
-                        }
-                        else if (!util.isBlank(req.body.width)) {
-                            options["width"] = req.body.width;
-                        }
+                catch(innerException) {
+                    meLogger.error(innerException);
 
-                        if (!util.isBlank(req.query.height)) {
-                            options["height"] = req.query.height;
-                        }
-                        else if (!util.isBlank(req.body.height)) {
-                            options["height"] = req.body.height;
-                        }
+                    //Set Response ContentType
+                    res.writeHead(500, {"Content-Type": "application/json"});
 
-                        // ShotBot Module Object
-                        let objShotBot = new ShotBot(varURL, options);
+                    //Write Output
+                    res.write(JSON.stringify({
+                        "Status": "ERROR",
+                        "Message": innerException
+                    }));
+                    res.end();
 
-						// Generate Screenshot
-                        let outputResponse = await objShotBot.getScreenshot();
-
-                        var blnResult = await util.setCachedResult(strKey, outputResponse);
-                        if (!blnResult) {
-                            meLogger.error("MemcachedClient Set Exception at " + (new Date()));
-                        }
-
-                        //Set Response ContentType
-                        res.writeHead(200, { "Content-Type": "application/json", "X-Cache": "MISS" });
-
-                        //Write Output
-                        res.write(JSON.stringify(outputResponse));
-                        res.end();
-                    }
-                    catch(innerException) {
-                        meLogger.error(innerException);
-
-                        //Set Response ContentType
-                        res.writeHead(500, {"Content-Type": "application/json"});
-
-                        //Write Output
-                        res.write(JSON.stringify({
-                            "Status": "ERROR",
-                            "Message": innerException
-                        }));
-                        res.end();
-
-                        return;
-                    }
+                    return;
                 }
-            })();
+            }
         }
         catch (ex) {
             meLogger.error(ex);
