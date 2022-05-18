@@ -56,19 +56,19 @@ const doCapture = async (req, res) => {
             }
             else {
                 try {
-                    let options = null; 
-                    if (!util.isBlank(req.query.width)) {
-                        options["width"] = req.query.width;
+                    let options = {};
+                    if (!util.isBlank(req.query.width) && !isNaN(req.query.width)) {
+                        options["width"] = parseInt(req.query.width, 10);
                     }
-                    else if (!util.isBlank(req.body.width)) {
-                        options["width"] = req.body.width;
+                    else if (!util.isBlank(req.body.width) && !isNaN(req.body.width)) {
+                        options["width"] = parseInt(req.body.width, 10);
                     }
 
-                    if (!util.isBlank(req.query.height)) {
-                        options["height"] = req.query.height;
+                    if (!util.isBlank(req.query.height) && !isNaN(req.query.height)) {
+                        options["height"] = parseInt(req.query.height, 10);
                     }
-                    else if (!util.isBlank(req.body.height)) {
-                        options["height"] = req.body.height;
+                    else if (!util.isBlank(req.body.height) && !isNaN(req.body.height)) {
+                        options["height"] = parseInt(req.body.height, 10);
                     }
 
                     // ShotBot Module Object

@@ -26,6 +26,7 @@ module.exports = class ShotBot {
 		var me = this;
 
 		me.options = _.extend({}, me.defaultOptions, options);
+		console.log(me.options);
 		me.logger = winston(process.env.LOG_LEVEL);
 
 		if (!util.isBlank(strURL)) {
