@@ -73,14 +73,14 @@ module.exports = class ShotBot {
 			browser.close();
 
 			if (!util.isBlank(imageCloudFrontURL)) {
-				return {
+				return _.extend({
 					"screenshotPath": imageCloudFrontURL["FilePath"]
-				};
+				}, me.options);
 			}
 			else {
-				return {
+				return _.extend({
 					"screenshotPath": this.appServerURL + "/api/screenshot/" + imageName
-				};
+				}, me.options);
 			}
 		}
 		catch(ex) {
