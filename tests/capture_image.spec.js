@@ -7,10 +7,10 @@ const assert = require("assert");
 const expect = require("chai").expect;
 const app = require("../app");
 
-describe("GET /api/capture", function() {
-    it("Capture StatusCode 200 OK with screenshotPath not null", function(done) {
+describe("GET /api/capture/image", function() {
+    it("Capture Image StatusCode 200 OK with screenshotPath not null", function(done) {
         supertest(app)
-		.get("/api/capture")
+		.get("/api/capture/image")
 		.query({ "url": "https://gaurangjadia.com" })
 		.set("accept", "application/json")
 		.expect(200)
@@ -27,10 +27,10 @@ describe("GET /api/capture", function() {
 	});
 });
 
-describe("POST /api/capture", function() {
-    it("Capture StatusCode 200 OK with screenshotPath not null", function(done) {
+describe("POST /api/capture/image", function() {
+    it("Capture Image StatusCode 200 OK with screenshotPath not null", function(done) {
         supertest(app)
-		.post("/api/capture")
+		.post("/api/capture/image")
 		.send({ "url": "https://gaurangjadia.com" })
 		.set("accept", "application/json")
 		.expect(200)
