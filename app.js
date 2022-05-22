@@ -3,17 +3,21 @@
 // Load external plugins
 const dotenv = require("dotenv");
 const express = require("express");
+const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const favicon = require("serve-favicon");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const { createTerminus } = require("@godaddy/terminus")
 
 // Load local plugins
 const winston = require("./src/logger").winston;
 const routes = require("./routes/index");
 const shotbot = require('./routes/shotbot');
+var meLogger = winston(process.env.LOG_LEVEL);
 
 // ExpressJS App Setup
 var app = express();
@@ -86,11 +90,49 @@ app.use(function (err, req, res, next) {
 // Port Setup fallback to 3000
 app.set("port", process.env.PORT || 3000);
 
-// ExpressJS Server Setup
-var server = app.listen(app.get("port"), function () {
-    var meLogger = winston(process.env.LOG_LEVEL);
+/*
+// HttpOptions to accept https connections!
+const httpsOptions = {
+    key: fs.readFileSync(path.join(path.dirname(fs.realpathSync(__filename)), "./security/private.key")),
+    cert: fs.readFileSync(path.join(path.dirname(fs.realpathSync(__filename)), "./security/primary.crt")),
+    requestCert: false,
+    rejectUnauthorized: false
+}
+const server = https.createServer(app);
+*/
 
-    meLogger.info('Express server listening on port ' + server.address().port);
+const server = http.createServer(app);
+
+// Health Check
+const onSignal = () => {
+    meLogger.log("server is starting cleanup");
+    return Promise.all([
+        // your clean logic, like closing database connections
+    ]);
+}
+  
+const onHealthCheck = async ({ state }) => {
+    if (!state.isShuttingDown) {
+        return Promise.resolve(
+            "All Systems Go!"
+        )
+    }
+    else {
+        return Promise.reject(
+            "Server is shutting down!"
+        )
+    }
+}
+
+createTerminus(server, {
+    signal: "SIGINT",
+    healthChecks: { "/healthcheck": onHealthCheck },
+    onSignal
+});
+
+// ExpressJS Server Setup
+server.listen(app.get("port"), function () {
+    meLogger.info("Express server listening on port " + server.address().port);
 });
 
 // Return ExpressJS Server
