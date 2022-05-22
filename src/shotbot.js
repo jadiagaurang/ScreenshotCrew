@@ -10,12 +10,15 @@ const { v4: uuidv4 } = require("uuid");
 const { URL } = require("url");
 const AWS = require("aws-sdk");
 const _ = require("underscore");
+
 // Internal Modules
 const winston = require("./logger").winston;
 const util = require("./utility.js");
 
 module.exports = class ShotBot {
 	defaultOptions = {
+		"fileFormat": "image",	//"image", "pdf"
+		"pageSize": "A4",
 		"width": 1440,
 		"height": 1024,
 		"isMobile": false
@@ -26,7 +29,6 @@ module.exports = class ShotBot {
 		var me = this;
 
 		me.options = _.extend({}, me.defaultOptions, options);
-		console.log(me.options);
 		me.logger = winston(process.env.LOG_LEVEL);
 
 		if (!util.isBlank(strURL)) {
@@ -108,23 +110,23 @@ module.exports = class ShotBot {
 			const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36";
 			await page.setUserAgent(userAgent);
 
-			await page.goto(this.objURL, {
+			await page.goto(me.objURL, {
 				waitUntil: "networkidle2",
-				timeout: 90000	//1.5 minutes
+				timeout: (90 * 1000)	//1.5 minutes
 			});
 
 			//Delay 1s
 			await util.delay(1000);
 
 			//Scroll to Bottom of the Page to unvail all the lazy/animated content of the page
-			await this.scrollToBottom(page);
-			await this.scrollToTop(page);
+			await me.scrollToBottom(page);
+			await me.scrollToTop(page);
 
 			//Delay 1s
 			await util.delay(1000);
 
 			// Get Page's Width and Height to debug wrong section data
-			this.dimensions = await page.evaluate(() => {
+			me.dimensions = await page.evaluate(() => {
 				return {
 					width: Math.max(
 						1280,
@@ -139,6 +141,15 @@ module.exports = class ShotBot {
 					)
 				};
 			});
+
+			me.options.document = {
+				"width": me.dimensions.width,
+				"height": me.dimensions.height
+			};
+
+
+			//TODO
+			//me.options.height = me.dimensions.height;
 		}
 		catch(ex) {
 			me.logger.error(ex);
@@ -207,21 +218,56 @@ module.exports = class ShotBot {
 			me.logger.info("takeScrenshot - Making Directory at " + this.screenshotPath);
 		}
 
-		let imageName = this.requestId + ".webp";
-		let screenshotPath = this.screenshotPath + imageName;
+		if (me.options.fileFormat == "pdf") {
+			let imageName = this.requestId + ".pdf";
+			let screenshotPath = this.screenshotPath + imageName;
 
-		//FullPage is causing webpage to scale so, adding clip screenshot correctly!
-		await page.screenshot({
-			path: screenshotPath,
-			type: "webp",	// jpeg, png or webp
-			quality: 100,
-			fullPage: true,
-			omitBackground: false,
-			encoding: "binary",	//	base64 or binary
-			captureBeyondViewport: true,
-		});
+			//FullPage is causing webpage to scale so, adding clip screenshot correctly!
+			let pdfOptions = {
+				path: screenshotPath,
+				scale: 1,
+				displayHeaderFooter: false,
+				printBackground: true,
+				landscape: false,
+				preferCSSPageSize: false,
+				omitBackground: false,
+				timeout: (45 * 1000)
+			};
 
-		return imageName;
+			if (util.isBlank(me.options.width) && util.isBlank(me.options.height)) {
+				if (!_.contains(["Letter", "Legal", "Tabloid", "Ledger", "A0", "A1", "A2", "A3", "A4", "A5", "A6"], me.options.pageSize)) {
+					pdfOptions["format"] = "A4";
+				}
+				else {
+					pdfOptions["format"] = me.options.pageSize;
+				}
+			}
+			else {
+				pdfOptions["width"] = me.options.width;
+				pdfOptions["height"] = me.options.height;
+			}
+
+			await page.pdf(pdfOptions);
+
+			return imageName;
+		}
+		else {
+			let imageName = this.requestId + ".webp";
+			let screenshotPath = this.screenshotPath + imageName;
+
+			//FullPage is causing webpage to scale so, adding clip screenshot correctly!
+			await page.screenshot({
+				path: screenshotPath,
+				type: "webp",	// jpeg, png or webp
+				quality: 100,
+				fullPage: true,
+				omitBackground: false,
+				encoding: "binary",	//	base64 or binary
+				captureBeyondViewport: true,
+			});
+
+			return imageName;
+		}
 	}
 
 	uploadScreenshot = async (imageName) => {
@@ -285,7 +331,7 @@ module.exports = class ShotBot {
 				res.end();
 			}
 			else {
-				me.logger.info(stat);
+				me.logger.info("File Size: " + stat.size);
 
 				fs.readFile(imagePath, function(errInner, data) {
 					if(errInner) {
@@ -298,8 +344,14 @@ module.exports = class ShotBot {
 						res.end();
 					}
 					else {
-						res.writeHead(200, { "Content-Type": "image/webp" });
-						res.end(data);
+						if (imageName.endsWith(".pdf")) {
+							res.writeHead(200, { "Content-Type": "application/pdf" });
+							res.end(data);
+						}
+						else {
+							res.writeHead(200, { "Content-Type": "image/webp" });
+							res.end(data);
+						}
 					}
 				});
 			}

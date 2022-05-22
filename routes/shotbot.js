@@ -5,6 +5,8 @@
 // External Packages
 const express = require("express");
 var router = express.Router();
+const _ = require("underscore");
+
 // Internal Modules
 const winston = require("../src/logger").winston;
 const ShotBot = require("../src/shotbot.js");
@@ -12,12 +14,12 @@ const util = require("../src/utility.js");
 var meLogger = winston(process.env.LOG_LEVEL);
 
 /* GET */
-router.get("/capture", function (req, res) {
-	doCapture(req, res);
+router.get("/capture/:fileFormat", function (req, res) {
+	doCapture(req, res, req.params.fileFormat);
 });
 /* POST */
-router.post("/capture", function (req, res) {
-	doCapture(req, res);
+router.post("/capture/:fileFormat", function (req, res) {
+	doCapture(req, res, req.params.fileFormat);
 });
 
 /* GET: To fetch Locally stored screenshot */
@@ -27,7 +29,7 @@ router.get("/screenshot/:screenshotName", function(req, res) {
 });
 
 //Routing Callback
-const doCapture = async (req, res) => {
+const doCapture = async (req, res, fileFormat) => {
     try {
         //Get Web Page URL from the Request
         var varURL = req.query.url;    //Try to get it from Query String
@@ -39,8 +41,15 @@ const doCapture = async (req, res) => {
             throw new Error("Invalid URL");
         }
 
+        if (util.isBlank(fileFormat)) {
+            fileFormat = "image";
+        }
+        else if (!_.contains(["image", "pdf"], fileFormat)) {
+            fileFormat = "image";
+        }
+
         try {
-            var strKey = varURL.toLowerCase();
+            var strKey = "URL:" + varURL.toLowerCase() + "&fileFormat" + fileFormat;
 
             var varCachedResult = await util.getCachedResult(strKey);
 
@@ -56,7 +65,10 @@ const doCapture = async (req, res) => {
             }
             else {
                 try {
-                    let options = {};
+                    let options = {
+                        "fileFormat": fileFormat
+                    };
+
                     if (!util.isBlank(req.query.width) && !isNaN(req.query.width)) {
                         options["width"] = parseInt(req.query.width, 10);
                     }
@@ -69,6 +81,13 @@ const doCapture = async (req, res) => {
                     }
                     else if (!util.isBlank(req.body.height) && !isNaN(req.body.height)) {
                         options["height"] = parseInt(req.body.height, 10);
+                    }
+
+                    if (!util.isBlank(req.query.pageSize)) {
+                        options["pageSize"] = req.query.pageSize;
+                    }
+                    else if (!util.isBlank(req.body.pageSize)) {
+                        options["pageSize"] = req.body.pageSize;
                     }
 
                     // ShotBot Module Object
