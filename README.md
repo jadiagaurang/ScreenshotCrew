@@ -9,28 +9,46 @@
 ScreenshotCrew is an open-source screenshot as a service using [Puppeteer headless browser](https://github.com/puppeteer/puppeteer). Using Node.js, [Puppeteer](https://pptr.dev/) and other plugins, ScreenshotCrew provides utility tool to create screenshot from any web page.
 
 ## Motivation
-* https://screenshotlayer.com/
-* https://urlbox.io/
-* https://browshot.com/
-* https://screenshotmachine.com/
+
+* [https://screenshotlayer.com/](https://screenshotlayer.com/)
+* [https://urlbox.io/](https://urlbox.io/)
+* [https://browshot.com/](https://browshot.com/)
+* [https://screenshotmachine.com/](https://screenshotmachine.com/)
 
 ## Demo
+
 [https://screenshotcrew.com/](https://screenshotcrew.com/)
 
 ## API Reference
 
+### Image
+
 ```bash
-curl --location --request GET "https://screenshotcrew.com/api/capture?width=1920&url=https://gaurangjadia.com"
+curl --location --request GET "https://screenshotcrew.com/api/capture/image?width=1920&url=https://gaurangjadia.com"
 ```
 
 ```bash
-curl --location --request POST "https://screenshotcrew.com/api/capture" --header "Content-Type: application/json" --data-raw "{
+curl --location --request POST "https://screenshotcrew.com/api/capture/image" --header "Content-Type: application/json" --data-raw "{
     \"width\": 1920,
     \"url\": \"https://gaurangjadia.com\"
 }"
 ```
 
+### PDF
+
+```bash
+curl --location --request GET "https://screenshotcrew.com/api/capture/pdf?pageSize=A4&url=https://gaurangjadia.com"
+```
+
+```bash
+curl --location --request POST "https://screenshotcrew.com/api/capture/pdf" --header "Content-Type: application/json" --data-raw "{
+    \"pageSize\": \"A4\",
+    \"url\": \"https://gaurangjadia.com\"
+}"
+```
+
 ## Installation
+
 ```base
 npm install
 npm update
@@ -58,9 +76,11 @@ docker run -d -p 80:80 jadiagaurang/screenshotcrew
 ```
 
 ## Tests
+
 ```base
 npm test
 ```
 
 ## License
+
 Please see the [license file](https://github.com/jadiagaurang/ScreenshotCrew/blob/main/LICENSE) for more information.

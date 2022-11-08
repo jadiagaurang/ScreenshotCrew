@@ -15,8 +15,8 @@ const { createTerminus } = require("@godaddy/terminus")
 
 // Load local plugins
 const winston = require("./src/logger").winston;
-const routes = require("./routes/index");
-const shotbot = require('./routes/shotbot');
+const routesViews = require("./routes/index");
+const routesAPIEndpoints = require('./routes/shotbot');
 var meLogger = winston(process.env.LOG_LEVEL);
 
 // ExpressJS App Setup
@@ -54,8 +54,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // WebApp and API Route Setup
-app.use("/", routes);
-app.use("/api", shotbot);
+app.use("/", routesViews);
+app.use("/api", routesAPIEndpoints);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
